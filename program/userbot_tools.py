@@ -53,7 +53,7 @@ async def leave_all(client, message):
 
     left = 0
     failed = 0
-    
+
     msg = await message.reply("🔄 Userbot leaving all Group !")
     async for dialog in user.iter_dialogs():
         try:
@@ -78,9 +78,9 @@ async def leave_all(client, message):
 async def ubot_leave(c: Client, m: Message):
 #    ass_id = (await user.get_me()).id
     bot_id = (await c.get_me()).id
-    chat_id = m.chat.id
     left_member = m.left_chat_member
     if left_member.id == bot_id:
+        chat_id = m.chat.id
         await user.leave_chat(chat_id)
 #    elif left_member.id == ass_id:
 #        await c.leave_chat(chat_id)

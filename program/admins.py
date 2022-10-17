@@ -25,10 +25,8 @@ from pyrogram.types import (
 @authorized_users_only
 async def update_admin(client, message):
     global admins
-    new_admins = []
     new_ads = await client.get_chat_members(message.chat.id, filter="administrators")
-    for u in new_ads:
-        new_admins.append(u.user.id)
+    new_admins = [u.user.id for u in new_ads]
     admins[message.chat.id] = new_admins
     await message.reply_text(
         "✅ Bot **reloaded correctly !**\n✅ **Admin list** has **updated !**"
@@ -39,7 +37,6 @@ async def update_admin(client, message):
 @authorized_users_only
 async def skip(c: Client, m: Message):
     await m.delete()
-    user_id = m.from_user.id
     chat_id = m.chat.id
     if len(m.command) < 2:
         op = await skip_current_song(chat_id)
@@ -50,6 +47,7 @@ async def skip(c: Client, m: Message):
         elif op == 2:
             await c.send_message(chat_id, "🗑️ Clearing the **Queues**\n\n**• userbot** leaving video chat.")
         else:
+            user_id = m.from_user.id
             buttons = stream_markup(user_id)
             requester = f"[{m.from_user.first_name}](tg://user?id={m.from_user.id})"
             thumbnail = f"{IMG_5}"
@@ -65,19 +63,15 @@ async def skip(c: Client, m: Message):
                 caption=f"⏭ **Skipped** to the next track.\n\n🗂 **Name:** [{op[0]}]({op[1]})\n💭 **Chat:** `{chat_id}`\n🧸 **Request by:** {requester}",
             )
     else:
-        skip = m.text.split(None, 1)[1]
         OP = "🗑 **removed song from queue:**"
         if chat_id in QUEUE:
+            skip = m.text.split(None, 1)[1]
             items = [int(x) for x in skip.split(" ") if x.isdigit()]
             items.sort(reverse=True)
             for x in items:
-                if x == 0:
-                    pass
-                else:
+                if x != 0:
                     hm = await skip_item(chat_id, x)
-                    if hm == 0:
-                        pass
-                    else:
+                    if hm != 0:
                         OP = OP + "\n" + f"**#{x}** - {hm}"
             await m.reply(OP)
 
@@ -270,9 +264,9 @@ async def cbunmute(_, query: CallbackQuery):
 )
 @authorized_users_only
 async def change_volume(client, m: Message):
-    range = m.command[1]
     chat_id = m.chat.id
     if chat_id in QUEUE:
+        range = m.command[1]
         try:
             await call_py.change_volume_call(chat_id, volume=int(range))
             await m.reply(
