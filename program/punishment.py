@@ -36,10 +36,8 @@ async def global_banned(c: Client, message: Message):
             await message.reply_text("You can't gban sudo user !")
         else:
             await add_gban_user(user.id)
-            served_chats = []
             chats = await get_served_chats()
-            for chat in chats:
-                served_chats.append(int(chat["chat_id"]))
+            served_chats = [int(chat["chat_id"]) for chat in chats]
             m = await message.reply_text(
                 f"🚷 **Globally banning {user.mention}**\n⏱ Expected time: `{len(served_chats)}`"
             )
@@ -87,10 +85,8 @@ async def global_banned(c: Client, message: Message):
             await message.reply_text("This user already gbanned !")
         else:
             await add_gban_user(user_id)
-            served_chats = []
             chats = await get_served_chats()
-            for chat in chats:
-                served_chats.append(int(chat["chat_id"]))
+            served_chats = [int(chat["chat_id"]) for chat in chats]
             m = await message.reply_text(
                 f"🚷 **Globally banning {mention}**\n⏱ Expected time: `{len(served_chats)}`"
             )

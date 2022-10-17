@@ -48,7 +48,7 @@ async def _human_time_duration(seconds):
     for unit, div in TIME_DURATION_UNITS:
         amount, seconds = divmod(int(seconds), div)
         if amount > 0:
-            parts.append("{} {}{}".format(amount, unit, "" if amount == 1 else "s"))
+            parts.append(f'{amount} {unit}{"" if amount == 1 else "s"}')
     return ", ".join(parts)
 
 
@@ -160,9 +160,7 @@ async def approve_join_chat(c: Client, m: ChatJoinRequest):
 @Client.on_message(filters.new_chat_members)
 async def new_chat(c: Client, m: Message):
     chat_id = m.chat.id
-    if await is_served_chat(chat_id):
-        pass
-    else:
+    if not await is_served_chat(chat_id):
         await add_served_chat(chat_id)
     ass_uname = (await user.get_me()).username
     bot_id = (await c.get_me()).id

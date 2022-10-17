@@ -188,12 +188,12 @@ async def cbmenu(_, query: CallbackQuery):
     chat_id = query.message.chat.id
     user_id = query.message.from_user.id
     buttons = menu_markup(user_id)
-    chat = query.message.chat.title
     if chat_id in QUEUE:
-          await query.edit_message_text(
-              f"⚙️ **Settings of** {chat}\n\n⏸ : pause stream\n▶️ : resume stream\n🔇 : mute userbot\n🔊 : unmute userbot\n⏹ : stop stream",
-              reply_markup=InlineKeyboardMarkup(buttons),
-          )
+        chat = query.message.chat.title
+        await query.edit_message_text(
+            f"⚙️ **Settings of** {chat}\n\n⏸ : pause stream\n▶️ : resume stream\n🔇 : mute userbot\n🔊 : unmute userbot\n⏹ : stop stream",
+            reply_markup=InlineKeyboardMarkup(buttons),
+        )
     else:
         await query.answer("❌ nothing is currently streaming", show_alert=True)
 
